@@ -13,4 +13,17 @@ So, "Iqza's Komputer: hey hey" is printed first because it's immediately execute
 
 </details>
 
+<details>
+<summary>1.3. Multiple Spawn and removing drop</summary>
+
+![1.3. Multiple Spawn and removing drop 1](https://i.ibb.co/YySYnWf/gambar-2024-05-03-092309034.png)
+![1.3. Multiple Spawn and removing drop 2](https://i.ibb.co/nfJynk7/gambar-2024-05-03-092557681.png)
+
+When the line `drop(spawner);` is removed, the program does not stop because the `Executor`'s `run` method is waiting indefinitely for tasks to be sent through the `ready_queue`, but since the `spawner` is still alive, it keeps sending tasks, and none of them complete.
+
+The `drop(spawner);` line is important because it signals the end of task spawning. When you drop the `spawner`, it closes the sending end of the channel, indicating that no more tasks will be sent. Consequently, the `Executor` eventually consumes all the tasks from the `ready_queue` and exits the `run` method when there are no more tasks to process.
+
+Without `drop(spawner);`, the `Executor` remains blocked in its `run` method, waiting for more tasks to arrive, and the program does not terminate because there's no indication that it should stop waiting for tasks.
+</details>
+
 </details>
